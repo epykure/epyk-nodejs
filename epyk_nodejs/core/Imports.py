@@ -45,5 +45,5 @@ class NodeImportManager(Imports.ImportManager):
         if not os.path.exists(module_path):
           logging.warning("Module %s not loaded on the NodeJs server, please check the npm packages" % k)
 
-        requirements.append("var %s = require('%s')" % (mod_register.get('name', k), mod_register['npm']))
+        requirements.append("var %s = require('%s')" % (mod_register.get('name', mod_register.get('alias')), mod_register['npm']))
     return requirements
