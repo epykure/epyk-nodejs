@@ -1,11 +1,14 @@
 
 import os
+
 from epyk.core.py import PyOuts
+
+from epyk_nodejs.core import Imports
 
 
 class PyOuts(PyOuts.PyOuts):
 
-  def node_files(self, path):
+  def node_files(self, path, node_modules_path=None):
     """
 
     :param path:
@@ -32,10 +35,13 @@ class PyOuts(PyOuts.PyOuts):
         f.write("exports.%s = function(htmlObj%s" % (c,  d.split("function %s(htmlObj" % c)[-1]))
 
     # Then write the app itself
+    # First check the various requirements to be added
     with open(os.path.join(path, "pages", "%s.html" % self._options['module']), "w") as f:
       f.write("<body>%s</body>"% "\n".join(htmlParts))
 
-    print(self._report.jsImports)
+    node_modules_path = node_modules_path or os.path.join(path, 'node_modules')
+    importMng = Imports.NodeImportManager(online=True, report=self._report)
+    print(importMng.to_node((self._report.jsImports), node_modules_path=node_modules_path))
     #body = str(self._report.body.set_content(self._report, "\n".join(htmlParts)))
     #esults = self._to_html_obj(htmlParts, cssParts)
     #print(results)
